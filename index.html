@@ -87,9 +87,11 @@
                 html = f"<b>Ingredientes para {harina:.0f}g:</b><br>"
                 html += f"<div class='ingredient'><span>Harina Mandioca</span><span>{harina:.0f} g</span></div>"
                 html += f"<div class='ingredient'><span class='highlight'>Huevos</span><span class='highlight'>{huevos} u.</span></div>"
-                html += f"<div class='ingredient'><span>Queso</span><span>{round(800 * factor)} g</span></div>"
+                html += f"<div class='ingredient'><span>Sal</span><span>{round(20 * factor, 1)} g</span></div>"
+                html += f"<div class='ingredient'><span>Polvo Hornear</span><span>{round(15 * factor, 1)} g</span></div>"
+                html += f"<div class|='ingredient'><span>Manteca</span><span>{round(100 * factor, 1)} g</span></div>"
                 html += f"<div class='ingredient'><span>Leche</span><span>{round(300 * factor)} ml</span></div>"
-                html += f"<div class='ingredient'><span>Manteca</span><span>{round(100 * factor)} g</span></div>"
+                html += f"<div class='ingredient'><span>Queso</span><span>{round(800 * factor)} g</span></div>"
                 document.querySelector("#res_chip").innerHTML = html
             except: pass
 
@@ -98,7 +100,9 @@
                 n = float(document.querySelector("#cant_chori").value)
                 html = f"<b>Ingredientes para {int(n)} choris:</b><br>"
                 html += f"<div class='ingredient'><span>Harina</span><span>{round(60 * n)} g</span></div>"
+                html += f"<div class='ingredient'><span>Sal</span><span>{round(1.2 * n, 1)} g</span></div>"
                 html += f"<div class='ingredient'><span>Levadura Seca</span><span>{round(1.5 * n, 1)} g</span></div>"
+                html += f"<div class='ingredient'><span>Aceite</span><span>{round(3.2 * n, 1)} g/ml</span></div>"
                 html += f"<div class='ingredient'><span>Agua Tibia</span><span>{round(42 * n)} ml</span></div>"
                 document.querySelector("#res_chori").innerHTML = html
             except: pass
@@ -110,7 +114,9 @@
                 html = f"<b>Ingredientes para {h:.0f}g:</b><br>"
                 html += f"<div class='ingredient'><span>Harina 000</span><span>{h:.0f} g</span></div>"
                 html += f"<div class='ingredient'><span>Agua</span><span>{round(800 * f)} ml</span></div>"
-                html += f"<div class='ingredient'><span>Aceite Oliva</span><span>{round(40 * f)} ml</span></div>"
+                html += f"<div class='ingredient'><span>Levadura Seca</span><span>{round(5 * f, 1)} g</span></div>"
+                html += f"<div class='ingredient'><span>Aceite Oliva EV</span><span>{round(40 * f, 1)} g/ml</span></div>"
+                html += f"<div class='ingredient'><span>Sal</span><span>{round(20 * f, 1)} g</span></div>"
                 document.querySelector("#res_foc").innerHTML = html
             except: pass
     </script>
