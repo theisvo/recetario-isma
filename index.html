@@ -11,17 +11,19 @@
         .container { background: white; padding: 20px; border-radius: 15px; max-width: 500px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         h1 { color: #8d6e63; text-align: center; font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid #d7ccc8; padding-bottom: 10px; }
         .tabs { display: flex; gap: 5px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: #d7ccc8; cursor: pointer; border-radius: 8px 8px 0 0; font-weight: bold; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: #d7ccc8; cursor: pointer; border-radius: 8px 8px 0 0; font-weight: bold; font-size: 0.9rem; }
         .tab-btn.active { background: #8d6e63; color: white; }
         .recipe-section { display: none; }
         .recipe-section.active { display: block; }
         .input-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #5d4037; }
-        input { width: 100%; padding: 12px; border: 1px solid #d7ccc8; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        input { width: 100%; padding: 12px; border: 1px solid #d7ccc8; border-radius: 8px; box-sizing: border-box; font-size: 1rem; background: #fff; }
         button.calc-btn { width: 100%; padding: 15px; background: #6d4c41; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 1.1rem; }
-        .results { margin-top: 20px; background: #efebe9; padding: 15px; border-radius: 10px; border-left: 5px solid #8d6e63; }
+        button.calc-btn:hover { background: #5d4037; }
+        .results { margin-top: 20px; background: #efebe9; padding: 15px; border-radius: 10px; border-left: 5px solid #8d6e63; min-height: 100px; }
         .ingredient { margin: 8px 0; display: flex; justify-content: space-between; border-bottom: 1px dashed #d7ccc8; padding-bottom: 4px; }
         .highlight { color: #c0392b; font-weight: bold; }
+        .footer-note { font-size: 0.8rem; text-align: center; color: #8d6e63; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -37,29 +39,31 @@
         <div id="chipacos" class="recipe-section active">
             <div class="input-group">
                 <label>Harina de mandioca (g):</label>
-                <input type="number" id="harina_chip" value="1000">
+                <input type="number" id="harina_chip" value="1000" oninput="pyscript.runtime.globals.get('calc_chip')()">
             </div>
             <button class="calc-btn" py-click="calc_chip">Calcular Chipá</button>
-            <div id="res_chip" class="results">Ingresa valores para ver la receta...</div>
+            <div id="res_chip" class="results"></div>
         </div>
 
         <div id="choris" class="recipe-section">
             <div class="input-group">
                 <label>Cantidad de choripanes:</label>
-                <input type="number" id="cant_chori" value="10">
+                <input type="number" id="cant_chori" value="10" oninput="pyscript.runtime.globals.get('calc_chori')()">
             </div>
             <button class="calc-btn" py-click="calc_chori">Calcular Choripán</button>
-            <div id="res_chori" class="results">Ingresa valores para ver la receta...</div>
+            <div id="res_chori" class="results"></div>
         </div>
 
         <div id="focaccia" class="recipe-section">
             <div class="input-group">
                 <label>Harina 000 (g):</label>
-                <input type="number" id="harina_foc" value="1000">
+                <input type="number" id="harina_foc" value="1000" oninput="pyscript.runtime.globals.get('calc_foc')()">
             </div>
             <button class="calc-btn" py-click="calc_foc">Calcular Focaccia</button>
-            <div id="res_foc" class="results">Ingresa valores para ver la receta...</div>
+            <div id="res_foc" class="results"></div>
         </div>
+
+        <div class="footer-note">Actualizado con todas las proporciones de Isma</div>
     </div>
 
     <script>
@@ -78,9 +82,10 @@
         from pyscript import document
         import math
 
-        def calc_chip(event):
+        def calc_chip(event=None):
             try:
-                harina = float(document.querySelector("#harina_chip").value)
+                val = document.querySelector("#harina_chip").value
+                harina = float(val) if val else 0
                 factor = harina / 1000
                 huevos = math.ceil(4 * factor)
                 
@@ -89,27 +94,31 @@
                 html += f"<div class='ingredient'><span class='highlight'>Huevos</span><span class='highlight'>{huevos} u.</span></div>"
                 html += f"<div class='ingredient'><span>Sal</span><span>{round(20 * factor, 1)} g</span></div>"
                 html += f"<div class='ingredient'><span>Polvo Hornear</span><span>{round(15 * factor, 1)} g</span></div>"
-                html += f"<div class|='ingredient'><span>Manteca</span><span>{round(100 * factor, 1)} g</span></div>"
+                html += f"<div class='ingredient'><span>Manteca</span><span>{round(100 * factor, 1)} g</span></div>"
                 html += f"<div class='ingredient'><span>Leche</span><span>{round(300 * factor)} ml</span></div>"
                 html += f"<div class='ingredient'><span>Queso</span><span>{round(800 * factor)} g</span></div>"
                 document.querySelector("#res_chip").innerHTML = html
-            except: pass
+            except Exception as e:
+                pass
 
-        def calc_chori(event):
+        def calc_chori(event=None):
             try:
-                n = float(document.querySelector("#cant_chori").value)
+                val = document.querySelector("#cant_chori").value
+                n = float(val) if val else 0
                 html = f"<b>Ingredientes para {int(n)} choris:</b><br>"
-                html += f"<div class='ingredient'><span>Harina</span><span>{round(60 * n)} g</span></div>"
+                html += f"<div class='ingredient'><span>Harina</span><span>{round(60 * n, 1)} g</span></div>"
                 html += f"<div class='ingredient'><span>Sal</span><span>{round(1.2 * n, 1)} g</span></div>"
                 html += f"<div class='ingredient'><span>Levadura Seca</span><span>{round(1.5 * n, 1)} g</span></div>"
                 html += f"<div class='ingredient'><span>Aceite</span><span>{round(3.2 * n, 1)} g/ml</span></div>"
                 html += f"<div class='ingredient'><span>Agua Tibia</span><span>{round(42 * n)} ml</span></div>"
                 document.querySelector("#res_chori").innerHTML = html
-            except: pass
+            except Exception as e:
+                pass
 
-        def calc_foc(event):
+        def calc_foc(event=None):
             try:
-                h = float(document.querySelector("#harina_foc").value)
+                val = document.querySelector("#harina_foc").value
+                h = float(val) if val else 0
                 f = h / 1000
                 html = f"<b>Ingredientes para {h:.0f}g:</b><br>"
                 html += f"<div class='ingredient'><span>Harina 000</span><span>{h:.0f} g</span></div>"
@@ -118,7 +127,13 @@
                 html += f"<div class='ingredient'><span>Aceite Oliva EV</span><span>{round(40 * f, 1)} g/ml</span></div>"
                 html += f"<div class='ingredient'><span>Sal</span><span>{round(20 * f, 1)} g</span></div>"
                 document.querySelector("#res_foc").innerHTML = html
-            except: pass
+            except Exception as e:
+                pass
+
+        # Ejecutar al cargar
+        calc_chip()
+        calc_chori()
+        calc_foc()
     </script>
 </body>
 </html>
