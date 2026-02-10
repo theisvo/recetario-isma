@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetario Isma</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <style>
+        body { background-color: #f8f1e9; color: #333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 10px; display: flex; justify-content: center; }
+        .container { background: white; padding: 20px; border-radius: 15px; max-width: 500px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #8d6e63; text-align: center; font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid #d7ccc8; padding-bottom: 10px; }
+        .tabs { display: flex; gap: 5px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: #d7ccc8; cursor: pointer; border-radius: 8px 8px 0 0; font-weight: bold; }
+        .tab-btn.active { background: #8d6e63; color: white; }
+        .recipe-section { display: none; }
+        .recipe-section.active { display: block; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #5d4037; }
+        input { width: 100%; padding: 12px; border: 1px solid #d7ccc8; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        button.calc-btn { width: 100%; padding: 15px; background: #6d4c41; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 1.1rem; }
+        .results { margin-top: 20px; background: #efebe9; padding: 15px; border-radius: 10px; border-left: 5px solid #8d6e63; }
+        .ingredient { margin: 8px 0; display: flex; justify-content: space-between; border-bottom: 1px dashed #d7ccc8; padding-bottom: 4px; }
+        .highlight { color: #c0392b; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👨‍🍳 Recetario Isma</h1>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'chipacos')">Chipá</button>
+            <button class="tab-btn" onclick="openTab(event, 'choris')">Choripán</button>
+            <button class="tab-btn" onclick="openTab(event, 'focaccia')">Focaccia</button>
+        </div>
+
+        <div id="chipacos" class="recipe-section active">
+            <div class="input-group">
+                <label>Harina de mandioca (g):</label>
+                <input type="number" id="harina_chip" value="1000">
+            </div>
+            <button class="calc-btn" py-click="calc_chip">Calcular Chipá</button>
+            <div id="res_chip" class="results">Ingresa valores para ver la receta...</div>
+        </div>
+
+        <div id="choris" class="recipe-section">
+            <div class="input-group">
+                <label>Cantidad de choripanes:</label>
+                <input type="number" id="cant_chori" value="10">
+            </div>
+            <button class="calc-btn" py-click="calc_chori">Calcular Choripán</button>
+            <div id="res_chori" class="results">Ingresa valores para ver la receta...</div>
+        </div>
+
+        <div id="focaccia" class="recipe-section">
+            <div class="input-group">
+                <label>Harina 000 (g):</label>
+                <input type="number" id="harina_foc" value="1000">
+            </div>
+            <button class="calc-btn" py-click="calc_foc">Calcular Focaccia</button>
+            <div id="res_foc" class="results">Ingresa valores para ver la receta...</div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("recipe-section");
+            for (i = 0; i < tabcontent.length; i++) tabcontent[i].classList.remove("active");
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) tablinks[i].classList.remove("active");
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+
+    <script type="py">
+        from pyscript import document
+        import math
+
+        def calc_chip(event):
+            try:
+                harina = float(document.querySelector("#harina_chip").value)
+                factor = harina / 1000
+                huevos = math.ceil(4 * factor)
+                
+                html = f"<b>Ingredientes para {harina:.0f}g:</b><br>"
+                html += f"<div class='ingredient'><span>Harina Mandioca</span><span>{harina:.0f} g</span></div>"
+                html += f"<div class='ingredient'><span class='highlight'>Huevos</span><span class='highlight'>{huevos} u.</span></div>"
+                html += f"<div class='ingredient'><span>Queso</span><span>{round(800 * factor)} g</span></div>"
+                html += f"<div class='ingredient'><span>Leche</span><span>{round(300 * factor)} ml</span></div>"
+                html += f"<div class='ingredient'><span>Manteca</span><span>{round(100 * factor)} g</span></div>"
+                document.querySelector("#res_chip").innerHTML = html
+            except: pass
+
+        def calc_chori(event):
+            try:
+                n = float(document.querySelector("#cant_chori").value)
+                html = f"<b>Ingredientes para {int(n)} choris:</b><br>"
+                html += f"<div class='ingredient'><span>Harina</span><span>{round(60 * n)} g</span></div>"
+                html += f"<div class='ingredient'><span>Levadura Seca</span><span>{round(1.5 * n, 1)} g</span></div>"
+                html += f"<div class='ingredient'><span>Agua Tibia</span><span>{round(42 * n)} ml</span></div>"
+                document.querySelector("#res_chori").innerHTML = html
+            except: pass
+
+        def calc_foc(event):
+            try:
+                h = float(document.querySelector("#harina_foc").value)
+                f = h / 1000
+                html = f"<b>Ingredientes para {h:.0f}g:</b><br>"
+                html += f"<div class='ingredient'><span>Harina 000</span><span>{h:.0f} g</span></div>"
+                html += f"<div class='ingredient'><span>Agua</span><span>{round(800 * f)} ml</span></div>"
+                html += f"<div class='ingredient'><span>Aceite Oliva</span><span>{round(40 * f)} ml</span></div>"
+                document.querySelector("#res_foc").innerHTML = html
+            except: pass
+    </script>
+</body>
+</html>
